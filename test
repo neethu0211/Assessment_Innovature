@@ -1,0 +1,55 @@
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+
+public class Books {
+
+	public static void main(String[] args) throws InterruptedException {
+		// TODO Auto-generated method stub
+		System.setProperty("webdriver.chrome.driver",
+				"D:/new chrome driver/chromedriver-win64/chromedriver-win64/chromedriver.exe");
+		WebDriver driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		// Load the website
+		driver.get("https://www.bookswagon.com/");
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(8));// waiting for obj to shown on page
+		driver.findElement(By.xpath("//*[@id=\'ctl00_lihome\']/a")).click();
+		driver.findElement(By.xpath("//*[@id=\'aspnetForm\']/div[7]/ul/li[6]/a")).click();
+		driver.findElement(By.xpath("//*[@id=\'330\']")).click();
+		driver.findElement(By.xpath("//*[@id=\'ddlSort\']")).click();
+		driver.findElement(By.xpath("//*[@id=\"ddlSort\"]/option[3]")).click();
+		// String actualTitle=driver.findElement(By.xpath("<a
+		// href=\'https://www.bookswagon.com/book/1918-david-cornish-md/9781482687156\'>1918</a>")).getText();
+		String actualTitle = driver.findElement(By.xpath("//a[normalize-space()='1918']")).getText();
+		String expectedTitle = "1918";
+		System.out.println(actualTitle);
+		Assert.assertEquals(actualTitle, expectedTitle);
+		String rate = driver.findElement(By.xpath("//*[@id=\'listSearchResult\']/div[1]/div[3]/div[5]/div[1]/div"))
+				.getText();
+		System.out.println(rate);
+		driver.findElement(By.xpath("//*[@id=\'listSearchResult\']/div[1]/div[4]/div[5]/input[1]")).click();
+		String ActualCartCount = driver.findElement(By.xpath("//label[@id=\'ctl00_lblTotalCartItems\']")).getText();
+		System.out.println(ActualCartCount);
+		String ExpectedCartCount = "1";
+		Assert.assertEquals(ActualCartCount, ExpectedCartCount);
+		driver.findElement(By.xpath("//*[@id=\'aspnetForm\']/header/div[2]/div/div[3]/ul/li[2]/a")).click();
+
+		String VerifyingName = driver
+				.findElement(By.xpath("//*[@id=\'ctl00_phBody_BookCart_lvCart_ctrl0_lblProductTitle\']")).getText();
+		// verify name and price in two different pages are same or not
+		Assert.assertEquals(actualTitle, VerifyingName);
+
+		String VerifyingRate = driver
+				.findElement(By.xpath("//*[@id=\'ctl00_phBody_BookCart_lvCart_ctrl0_lblActualPrice\']")).getText();
+		Assert.assertEquals(rate, VerifyingRate);
+
+		Thread.sleep(5000);
+		driver.findElement(By.xpath("//input[@id='ctl00_phBody_BookCart_lvCart_imgPayment']")).click();
+
+		driver.close();
+	}
+
+}
